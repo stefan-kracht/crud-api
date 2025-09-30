@@ -1,10 +1,14 @@
 import { Hono } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { cors } from "hono/cors";
 import actionsRouter from "./routes/actions";
 import employeesRouter from "./routes/employees";
 import { swaggerUI } from "@hono/swagger-ui";
 
 const app = new OpenAPIHono();
+
+// Enable CORS for all routes
+app.use('*', cors());
 
 // Register route modules
 app.route("/employees", employeesRouter);
