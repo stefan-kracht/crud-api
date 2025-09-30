@@ -1,0 +1,26 @@
+meta {
+  name: Update employee
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/employees/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 
+}
+
+body:json {
+  {
+    "name": "",
+    "age": 0,
+    "isActive": false,
+    "department": "",
+    "salary": 0,
+    "hireDate": ""
+  }
+}

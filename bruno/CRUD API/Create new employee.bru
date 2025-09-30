@@ -1,0 +1,21 @@
+meta {
+  name: Create new employee
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/employees
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "",
+    "age": 0,
+    "isActive": false,
+    "department": "",
+    "salary": 0
+  }
+}

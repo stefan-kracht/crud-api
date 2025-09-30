@@ -1,0 +1,11 @@
+meta {
+  name: List all employees
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/employees
+  body: none
+  auth: inherit
+}
