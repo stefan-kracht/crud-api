@@ -11,7 +11,7 @@ A simple CRUD API for managing employees with an in-memory database, built with 
 - TypeScript support
 - Zod validation
 
-## Quick Start
+## Rund development server
 
 ```bash
 # Install dependencies
@@ -19,6 +19,18 @@ bun install
 
 # Start development server
 bun run dev
+```
+
+The API will be available at `http://localhost:3000`
+
+## Run with Docker
+
+```bash
+# Build the Docker image
+docker build -t crud-api .
+
+# Run the container
+docker run -p 3000:3000 crud-api
 ```
 
 The API will be available at `http://localhost:3000`
@@ -47,99 +59,7 @@ Visit `http://localhost:3000/docs` for the interactive Swagger UI documentation.
 
 The OpenAPI 3.0 specification is available at `http://localhost:3000/openapi.json`
 
-## Using with Postman
-
-### Option 1: Import OpenAPI Specification
-
-1. Start the development server: `bun run dev`
-2. Open Postman
-3. Click "Import" in the top left
-4. Select "Link" tab
-5. Enter: `http://localhost:3000/openapi.json`
-6. Click "Continue" and "Import"
-
-### Option 2: Manual Collection Creation
-
-1. Create a new collection in Postman
-2. Set base URL to `http://localhost:3000`
-3. Add the following requests:
-
-#### List Employees
-
-- Method: GET
-- URL: `{{baseUrl}}/employees`
-
-#### Get Employee
-
-- Method: GET
-- URL: `{{baseUrl}}/employees/:id`
-- Add path variable `id`
-
-#### Create Employee
-
-- Method: POST
-- URL: `{{baseUrl}}/employees`
-- Body (raw JSON):
-
-```json
-{
-  "name": "John Doe",
-  "age": 30,
-  "isActive": true,
-  "department": "engineering",
-  "salary": 75000
-}
-```
-
-#### Update Employee
-
-- Method: PUT
-- URL: `{{baseUrl}}/employees/:id`
-- Add path variable `id`
-- Body (raw JSON): Same as create, but all fields optional
-
-#### Delete Employee
-
-- Method: DELETE
-- URL: `{{baseUrl}}/employees/:id`
-- Add path variable `id`
-
-#### Seed Database
-
-- Method: POST
-- URL: `{{baseUrl}}/actions`
-- Body (raw JSON):
-```json
-{
-  "action": "seed",
-  "count": 5
-}
-```
-
-#### Clear Database
-
-- Method: POST
-- URL: `{{baseUrl}}/actions`
-- Body (raw JSON):
-```json
-{
-  "action": "clear"
-}
-```
-
-## Employee Schema
-
-```typescript
-{
-  id: string; // Auto-generated unique identifier
-  name: string; // Employee full name
-  age: number; // Age (18-100)
-  isActive: boolean; // Employment status
-  department: "engineering" | "marketing" | "sales" | "hr";
-  salary: number; // Annual salary
-  hireDate: string; // ISO date string (auto-set on creation)
-}
-```
+### OpenAPI Specification
 
 ## Development
 

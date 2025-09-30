@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import employeesRouter from "./routes/employees";
 import actionsRouter from "./routes/actions";
+import employeesRouter from "./routes/employees";
 import { swaggerUI } from "@hono/swagger-ui";
 
 const app = new OpenAPIHono();
