@@ -87,10 +87,10 @@ router.openapi(getEmployeeRoute, (c) => {
     return c.json({ error: "Employee not found" }, 404);
   }
 
-  // Generate deterministic image using faker seeded with employee ID
+  // Generate deterministic image using faker seeded with employee IDded
   const seed = parseInt(employee.id.slice(-10), 36) % 1000000 || 12345;
   faker.seed(seed);
-  const image = faker.image.avatar();
+  const image = faker.image.avatarGitHub();
 
   return c.json({ data: { ...employee, image } }, 200);
 });
@@ -134,19 +134,14 @@ router.openapi(createEmployeeRoute, async (c) => {
   try {
     const body = await c.req.json();
 
-    const id = generateId();
-    // Generate deterministic image for the new employee
-    const seed = parseInt(id.slice(-10), 36) % 1000000 || 12345;
-    faker.seed(seed);
     const newEmployee: Employee = {
-      id,
+      id: generateId(),
       name: body.name,
       age: body.age,
       isActive: body.isActive,
       department: body.department,
       salary: body.salary,
       hireDate: body.hireDate || new Date().toISOString(),
-      image: faker.image.avatar(),
     };
     employees.push(newEmployee);
     return c.json(newEmployee, 201);
