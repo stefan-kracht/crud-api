@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+// Department Zod schema (just the name)
+export const DepartmentSchema = z.string().openapi({ example: "Engineering" });
+
 // Employee Zod schema
 export const EmployeeSchema = z
   .object({
@@ -8,8 +11,8 @@ export const EmployeeSchema = z
     age: z.number().int().min(18).max(100).openapi({ example: 30 }),
     isActive: z.boolean().openapi({ example: true }),
     department: z
-      .enum(["engineering", "marketing", "sales", "hr"])
-      .openapi({ example: "engineering" }),
+      .string()
+      .openapi({ example: "eng", description: "Department ID" }),
     salary: z.number().int().min(0).openapi({ example: 75000 }),
     hireDate: z
       .string()
@@ -17,6 +20,9 @@ export const EmployeeSchema = z
       .openapi({ example: "2023-01-15T10:00:00.000Z" }),
   })
   .openapi("Employee");
+
+// Create department request schema (just the name)
+export const CreateDepartmentSchema = DepartmentSchema;
 
 // Create employee request schema (without id and hireDate)
 export const CreateEmployeeSchema = EmployeeSchema.omit({
@@ -54,6 +60,11 @@ export const EmployeeSummarySchema = EmployeeSchema.pick({
 });
 
 // GET responses with data wrapper
+export const ListDepartmentsResponseSchema = z.object({
+  data: z.array(DepartmentSchema),
+  count: z.number().openapi({ example: 4 }),
+});
+
 export const ListEmployeesResponseSchema = z.object({
   data: z.array(EmployeeSummarySchema),
   count: z.number().openapi({ example: 5 }),
@@ -64,7 +75,8 @@ export const GetEmployeeResponseSchema = z.object({
 });
 
 // Type exports for TypeScript
+export type Department = z.infer<typeof DepartmentSchema>;
+export type CreateDepartment = z.infer<typeof CreateDepartmentSchema>;
 export type Employee = z.infer<typeof EmployeeSchema>;
 export type CreateEmployee = z.infer<typeof CreateEmployeeSchema>;
 export type UpdateEmployee = z.infer<typeof UpdateEmployeeSchema>;
-export type Department = z.infer<typeof EmployeeSchema>["department"];

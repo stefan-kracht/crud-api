@@ -37,13 +37,13 @@ const listEmployeesRoute = createRoute({
 
 router.openapi(listEmployeesRoute, (c) => {
   return c.json({
-    data: employees.map(e => ({
+    data: employees.map((e) => ({
       id: e.id,
       name: e.name,
       department: e.department,
-      age: e.age
+      age: e.age,
     })),
-    count: employees.length
+    count: employees.length,
   });
 });
 
