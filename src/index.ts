@@ -41,4 +41,7 @@ app.get("/", (c) => {
   );
 });
 
-export default app;
+export default {
+  port: 3333,
+  fetch: app.fetch,
+};
