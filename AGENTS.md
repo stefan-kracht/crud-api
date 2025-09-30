@@ -20,5 +20,18 @@
 - **Exports**: Default export for main app, named exports for utilities
 
 ## Project Structure
-- `src/index.ts`: Main application entry point
+- `src/index.ts`: Main application entry point and route registration
+- `src/routes/`: Route modules organized by resource
+  - `employees.ts`: Employee CRUD endpoints
+  - `seed.ts`: Database seeding endpoints
+- `src/utils/`: Utility functions and helpers
+- In-memory database using array storage
 - Keep code modular and well-organized
+
+## API Endpoints
+- `GET /employees` - List all employees
+- `GET /employees/:id` - Get specific employee
+- `POST /employees` - Create new employee
+- `PUT /employees/:id` - Update employee
+- `DELETE /employees/:id` - Delete employee
+- `POST /seed?count=N` - Seed database with N random employees (default 10)
