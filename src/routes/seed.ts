@@ -1,19 +1,11 @@
-import { EmployeeSchema, employees } from "./employees";
-import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
-
+import { z } from "zod";
+import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { faker } from "@faker-js/faker";
 import { generateId } from "../utils/helpers";
-import { z } from "zod";
+import { employees } from "./employees";
+import { EmployeeSchema, SeedResponseSchema, type Employee } from "../schemas";
 
 const router = new OpenAPIHono();
-
-// Seed response schema
-const SeedResponseSchema = z.object({
-  message: z.string().openapi({ example: "Seeded database with 10 employees" }),
-  employees: z
-    .array(EmployeeSchema)
-    .openapi({ description: "The generated employees" }),
-});
 
 // POST /seed - Seed database with random employees
 const seedRoute = createRoute({

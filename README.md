@@ -141,6 +141,8 @@ src/
 ├── routes/
 │   ├── employees.ts  # Employee CRUD endpoints
 │   └── seed.ts       # Database seeding endpoints
+├── schemas/
+│   └── index.ts      # Centralized Zod schema definitions
 └── utils/
     └── helpers.ts    # Utility functions
 ```

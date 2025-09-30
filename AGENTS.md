@@ -24,6 +24,8 @@
 - `src/routes/`: Route modules organized by resource
   - `employees.ts`: Employee CRUD endpoints
   - `seed.ts`: Database seeding endpoints
+- `src/schemas/`: Centralized Zod schema definitions
+  - `index.ts`: All API schemas and TypeScript types
 - `src/utils/`: Utility functions and helpers
 - In-memory database using array storage
 - Keep code modular and well-organized
