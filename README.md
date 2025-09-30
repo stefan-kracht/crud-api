@@ -2,6 +2,16 @@
 
 A simple CRUD API for managing employees with an in-memory database, built with Hono and TypeScript.
 
+## Installation
+
+To run the API using the published Docker image:
+
+```bash
+docker run -p 8080:3000 ghcr.io/stefan-kracht/crud-api:latest
+```
+
+The API will be available at `http://localhost:8080`
+
 ## Features
 
 - Full CRUD operations for employees
