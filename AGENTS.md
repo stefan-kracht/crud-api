@@ -35,3 +35,7 @@
 - `PUT /employees/:id` - Update employee
 - `DELETE /employees/:id` - Delete employee
 - `POST /seed?count=N` - Seed database with N random employees (default 10)
+
+## API Documentation
+- `GET /docs` - Interactive Swagger UI documentation
+- `GET /openapi.json` - OpenAPI 3.0 specification (can be imported into Postman)

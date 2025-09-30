@@ -1,29 +1,101 @@
-import { Hono } from "hono";
-import { generateId } from "../utils/helpers";
+import { OpenAPIHono, createRoute } from "@hono/zod-openapi";
 
-// Employee interface with various primitive types
-export interface Employee {
-  id: string;
-  name: string;
-  age: number;
-  isActive: boolean;
-  department: "engineering" | "marketing" | "sales" | "hr"; // enum-like
-  salary: number;
-  hireDate: string; // ISO date string
-}
+import { generateId } from "../utils/helpers";
+import { z } from "zod";
+
+// Employee Zod schema
+export const EmployeeSchema = z
+  .object({
+    id: z.string().openapi({ example: "abc123" }),
+    name: z.string().openapi({ example: "John Doe" }),
+    age: z.number().int().min(18).max(100).openapi({ example: 30 }),
+    isActive: z.boolean().openapi({ example: true }),
+    department: z
+      .enum(["engineering", "marketing", "sales", "hr"])
+      .openapi({ example: "engineering" }),
+    salary: z.number().int().min(0).openapi({ example: 75000 }),
+    hireDate: z
+      .string()
+      .datetime()
+      .openapi({ example: "2023-01-15T10:00:00.000Z" }),
+  })
+  .openapi("Employee");
+
+// Create employee request schema (without id and hireDate)
+const CreateEmployeeSchema = EmployeeSchema.omit({ id: true, hireDate: true });
+
+// Update employee request schema (all fields optional except id)
+const UpdateEmployeeSchema = EmployeeSchema.partial().omit({ id: true });
+
+// Error response schema
+const ErrorSchema = z.object({
+  error: z.string().openapi({ example: "Employee not found" }),
+});
+
+// Success response schema for delete
+const DeleteSuccessSchema = z.object({
+  message: z.string().openapi({ example: "Employee deleted successfully" }),
+});
 
 // In-memory database
-export const employees: Employee[] = [];
+export const employees: z.infer<typeof EmployeeSchema>[] = [];
 
-const router = new Hono();
+const router = new OpenAPIHono();
 
 // GET /employees - List all employees
-router.get("/", (c) => {
+const listEmployeesRoute = createRoute({
+  method: "get",
+  path: "/",
+  summary: "List all employees",
+  description: "Retrieve a list of all employees in the database",
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: z.array(EmployeeSchema),
+        },
+      },
+      description: "List of employees",
+    },
+  },
+});
+
+router.openapi(listEmployeesRoute, (c) => {
   return c.json(employees);
 });
 
 // GET /employees/:id - Get specific employee
-router.get("/:id", (c) => {
+const getEmployeeRoute = createRoute({
+  method: "get",
+  path: "/:id",
+  summary: "Get employee by ID",
+  description: "Retrieve a specific employee by their ID",
+  request: {
+    params: z.object({
+      id: z.string().openapi({ example: "abc123" }),
+    }),
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: EmployeeSchema,
+        },
+      },
+      description: "Employee details",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorSchema,
+        },
+      },
+      description: "Employee not found",
+    },
+  },
+});
+
+router.openapi(getEmployeeRoute, (c) => {
   const id = c.req.param("id");
   const employee = employees.find((e) => e.id === id);
 
@@ -31,32 +103,49 @@ router.get("/:id", (c) => {
     return c.json({ error: "Employee not found" }, 404);
   }
 
-  return c.json(employee);
+  return c.json(employee, 200);
 });
 
 // POST /employees - Create new employee
-router.post("/", async (c) => {
+const createEmployeeRoute = createRoute({
+  method: "post",
+  path: "/",
+  summary: "Create new employee",
+  description: "Create a new employee with the provided information",
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: CreateEmployeeSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      content: {
+        "application/json": {
+          schema: EmployeeSchema,
+        },
+      },
+      description: "Employee created successfully",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorSchema,
+        },
+      },
+      description: "Invalid request data",
+    },
+  },
+});
+
+router.openapi(createEmployeeRoute, async (c) => {
   try {
-    const body = await c.req.json<Employee>();
+    const body = await c.req.json();
 
-    // Validate required fields
-    if (
-      !body.name ||
-      !body.age ||
-      typeof body.isActive !== "boolean" ||
-      !body.department ||
-      !body.salary
-    ) {
-      return c.json({ error: "Missing required fields" }, 400);
-    }
-
-    // Validate department enum
-    const validDepartments = ["engineering", "marketing", "sales", "hr"];
-    if (!validDepartments.includes(body.department)) {
-      return c.json({ error: "Invalid department" }, 400);
-    }
-
-    const newEmployee: Employee = {
+    const newEmployee = {
       id: generateId(),
       name: body.name,
       age: body.age,
@@ -74,35 +163,102 @@ router.post("/", async (c) => {
 });
 
 // PUT /employees/:id - Update employee
-router.put("/:id", async (c) => {
+const updateEmployeeRoute = createRoute({
+  method: "put",
+  path: "/:id",
+  summary: "Update employee",
+  description: "Update an existing employee's information",
+  request: {
+    params: z.object({
+      id: z.string().openapi({ example: "abc123" }),
+    }),
+    body: {
+      content: {
+        "application/json": {
+          schema: UpdateEmployeeSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: EmployeeSchema,
+        },
+      },
+      description: "Employee updated successfully",
+    },
+    400: {
+      content: {
+        "application/json": {
+          schema: ErrorSchema,
+        },
+      },
+      description: "Invalid JSON",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorSchema,
+        },
+      },
+      description: "Employee not found",
+    },
+  },
+});
+
+router.openapi(updateEmployeeRoute, async (c) => {
   try {
     const id = c.req.param("id");
-    const body = await c.req.json<Partial<Employee>>();
+    const body = await c.req.json();
     const employeeIndex = employees.findIndex((e) => e.id === id);
 
     if (employeeIndex === -1) {
       return c.json({ error: "Employee not found" }, 404);
     }
 
-    // Validate department if provided
-    if (body.department) {
-      const validDepartments = ["engineering", "marketing", "sales", "hr"];
-      if (!validDepartments.includes(body.department)) {
-        return c.json({ error: "Invalid department" }, 400);
-      }
-    }
-
     const updatedEmployee = { ...employees[employeeIndex], ...body };
     employees[employeeIndex] = updatedEmployee;
 
-    return c.json(updatedEmployee);
+    return c.json(updatedEmployee, 200);
   } catch (error) {
     return c.json({ error: "Invalid JSON" }, 400);
   }
 });
 
 // DELETE /employees/:id - Delete employee
-router.delete("/:id", (c) => {
+const deleteEmployeeRoute = createRoute({
+  method: "delete",
+  path: "/:id",
+  summary: "Delete employee",
+  description: "Delete an employee by their ID",
+  request: {
+    params: z.object({
+      id: z.string().openapi({ example: "abc123" }),
+    }),
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: DeleteSuccessSchema,
+        },
+      },
+      description: "Employee deleted successfully",
+    },
+    404: {
+      content: {
+        "application/json": {
+          schema: ErrorSchema,
+        },
+      },
+      description: "Employee not found",
+    },
+  },
+});
+
+router.openapi(deleteEmployeeRoute, (c) => {
   const id = c.req.param("id");
   const employeeIndex = employees.findIndex((e) => e.id === id);
 
@@ -111,7 +267,7 @@ router.delete("/:id", (c) => {
   }
 
   employees.splice(employeeIndex, 1);
-  return c.json({ message: "Employee deleted successfully" });
+  return c.json({ message: "Employee deleted successfully" }, 200);
 });
 
 export default router;
