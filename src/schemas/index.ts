@@ -49,3 +49,4 @@ export const SeedResponseSchema = z.object({
 export type Employee = z.infer<typeof EmployeeSchema>;
 export type CreateEmployee = z.infer<typeof CreateEmployeeSchema>;
 export type UpdateEmployee = z.infer<typeof UpdateEmployeeSchema>;
+export type Department = z.infer<typeof EmployeeSchema>["department"];

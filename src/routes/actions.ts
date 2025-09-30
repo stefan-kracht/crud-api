@@ -3,7 +3,7 @@ import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { faker } from "@faker-js/faker";
 import { generateId } from "./utils/helpers";
 import { employees } from "./employees";
-import { EmployeeSchema, SeedResponseSchema, type Employee } from "../schemas";
+import { EmployeeSchema, SeedResponseSchema, type Employee, type Department } from "../schemas";
 
 const router = new OpenAPIHono();
 
@@ -67,17 +67,17 @@ router.openapi(actionsRoute, async (c) => {
   const { action, count = 10 } = body;
 
   if (action === "seed") {
-    const departments: Array<"engineering" | "marketing" | "sales" | "hr"> = [
+    const departments: Department[] = [
       "engineering",
       "marketing",
       "sales",
       "hr",
     ];
 
-    const newEmployees: z.infer<typeof EmployeeSchema>[] = [];
+    const newEmployees: Employee[] = [];
 
     for (let i = 0; i < count; i++) {
-      const employee: z.infer<typeof EmployeeSchema> = {
+      const employee: Employee = {
         id: generateId(),
         name: faker.person.fullName(),
         age: faker.number.int({ min: 18, max: 65 }),
