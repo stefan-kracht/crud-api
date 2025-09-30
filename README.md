@@ -33,9 +33,9 @@ The API will be available at `http://localhost:3000`
 - `PUT /employees/:id` - Update employee
 - `DELETE /employees/:id` - Delete employee
 
-### Database Seeding
+### Database Actions
 
-- `POST /seed?count=N` - Seed database with N random employees (default: 10)
+- `POST /actions` - Perform database operations (seed or clear)
 
 ## API Documentation
 
@@ -107,7 +107,25 @@ The OpenAPI 3.0 specification is available at `http://localhost:3000/openapi.jso
 #### Seed Database
 
 - Method: POST
-- URL: `{{baseUrl}}/seed?count=5`
+- URL: `{{baseUrl}}/actions`
+- Body (raw JSON):
+```json
+{
+  "action": "seed",
+  "count": 5
+}
+```
+
+#### Clear Database
+
+- Method: POST
+- URL: `{{baseUrl}}/actions`
+- Body (raw JSON):
+```json
+{
+  "action": "clear"
+}
+```
 
 ## Employee Schema
 
@@ -140,7 +158,7 @@ src/
 ├── index.ts          # Main application entry point
 ├── routes/
 │   ├── employees.ts  # Employee CRUD endpoints
-│   └── seed.ts       # Database seeding endpoints
+│   └── actions.ts    # Database actions (seed/clear)
 ├── schemas/
 │   └── index.ts      # Centralized Zod schema definitions
 └── utils/

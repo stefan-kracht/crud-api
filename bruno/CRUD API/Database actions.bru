@@ -1,0 +1,18 @@
+meta {
+  name: Database actions
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/actions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "action": "",
+    "count": 0
+  }
+}

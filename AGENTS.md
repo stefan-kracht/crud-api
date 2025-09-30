@@ -36,7 +36,7 @@
 - `POST /employees` - Create new employee
 - `PUT /employees/:id` - Update employee
 - `DELETE /employees/:id` - Delete employee
-- `POST /seed?count=N` - Seed database with N random employees (default 10)
+- `POST /actions` - Perform database actions (seed/clear)
 
 ## API Documentation
 - `GET /docs` - Interactive Swagger UI documentation

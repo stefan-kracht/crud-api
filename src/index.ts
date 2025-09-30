@@ -1,14 +1,14 @@
 import { Hono } from "hono";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import employeesRouter from "./routes/employees";
-import seedRouter from "./routes/seed";
+import actionsRouter from "./routes/actions";
 import { swaggerUI } from "@hono/swagger-ui";
 
 const app = new OpenAPIHono();
 
 // Register route modules
 app.route("/employees", employeesRouter);
-app.route("/seed", seedRouter);
+app.route("/actions", actionsRouter);
 
 // OpenAPI documentation endpoint
 app.get("/openapi.json", (c) => {
