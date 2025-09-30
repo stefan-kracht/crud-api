@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
-import { generateId } from "../utils/helpers";
+import { generateId } from "./utils/helpers";
 import {
   EmployeeSchema,
   CreateEmployeeSchema,
   UpdateEmployeeSchema,
   ErrorSchema,
   DeleteSuccessSchema,
-  type Employee
+  type Employee,
 } from "../schemas";
 
 // In-memory database
