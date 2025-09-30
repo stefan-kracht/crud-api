@@ -45,9 +45,17 @@ export const SeedResponseSchema = z.object({
     .openapi({ description: "The generated employees" }),
 });
 
+// Employee summary schema for list endpoint
+export const EmployeeSummarySchema = EmployeeSchema.pick({
+  id: true,
+  name: true,
+  department: true,
+  age: true,
+});
+
 // GET responses with data wrapper
 export const ListEmployeesResponseSchema = z.object({
-  data: z.array(EmployeeSchema),
+  data: z.array(EmployeeSummarySchema),
   count: z.number().openapi({ example: 5 }),
 });
 
