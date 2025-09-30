@@ -7,7 +7,7 @@ A simple CRUD API for managing employees with an in-memory database, built with 
 To run the API using the published Docker image:
 
 ```bash
-docker run -d -p 8080:3000 ghcr.io/stefan-kracht/crud-api:latest
+docker run -d -p 8080:3333 ghcr.io/stefan-kracht/crud-api:latest
 ```
 
 The API will be available at `http://localhost:8080` and run in the background.
@@ -31,7 +31,7 @@ bun install
 bun run dev
 ```
 
-The API will be available at `http://localhost:3000`
+The API will be available at `http://localhost:3333`
 
 ## Run with Docker
 
@@ -40,10 +40,10 @@ The API will be available at `http://localhost:3000`
 docker build -t crud-api .
 
 # Run the container
-docker run -p 3000:3000 crud-api
+docker run -p 3333:3333 crud-api
 ```
 
-The API will be available at `http://localhost:3000`
+The API will be available at `http://localhost:3333`
 
 ## API Endpoints
 
@@ -63,11 +63,11 @@ The API will be available at `http://localhost:3000`
 
 ### Interactive Documentation
 
-Visit `http://localhost:3000/docs` for the interactive Swagger UI documentation.
+Visit `http://localhost:3333/docs` for the interactive Swagger UI documentation.
 
 ### OpenAPI Specification
 
-The OpenAPI 3.0 specification is available at `http://localhost:3000/openapi.json`
+The OpenAPI 3.0 specification is available at `http://localhost:3333/openapi.json`
 
 ### OpenAPI Specification
 

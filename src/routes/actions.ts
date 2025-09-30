@@ -3,7 +3,12 @@ import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
 import { faker } from "@faker-js/faker";
 import { generateId } from "./utils/helpers";
 import { employees } from "./employees";
-import { EmployeeSchema, SeedResponseSchema, type Employee, type Department } from "../schemas";
+import {
+  EmployeeSchema,
+  SeedResponseSchema,
+  type Employee,
+  type Department,
+} from "../schemas";
 
 const router = new OpenAPIHono();
 
