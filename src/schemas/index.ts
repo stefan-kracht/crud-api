@@ -45,6 +45,16 @@ export const SeedResponseSchema = z.object({
     .openapi({ description: "The generated employees" }),
 });
 
+// GET responses with data wrapper
+export const ListEmployeesResponseSchema = z.object({
+  data: z.array(EmployeeSchema),
+  count: z.number().openapi({ example: 5 }),
+});
+
+export const GetEmployeeResponseSchema = z.object({
+  data: EmployeeSchema,
+});
+
 // Type exports for TypeScript
 export type Employee = z.infer<typeof EmployeeSchema>;
 export type CreateEmployee = z.infer<typeof CreateEmployeeSchema>;

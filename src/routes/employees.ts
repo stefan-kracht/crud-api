@@ -7,6 +7,8 @@ import {
   UpdateEmployeeSchema,
   ErrorSchema,
   DeleteSuccessSchema,
+  ListEmployeesResponseSchema,
+  GetEmployeeResponseSchema,
   type Employee,
 } from "../schemas";
 
@@ -25,16 +27,16 @@ const listEmployeesRoute = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: z.array(EmployeeSchema),
+          schema: ListEmployeesResponseSchema,
         },
       },
-      description: "List of employees",
+      description: "List of employees with count",
     },
   },
 });
 
 router.openapi(listEmployeesRoute, (c) => {
-  return c.json(employees);
+  return c.json({ data: employees, count: employees.length });
 });
 
 // GET /employees/:id - Get specific employee
@@ -52,7 +54,7 @@ const getEmployeeRoute = createRoute({
     200: {
       content: {
         "application/json": {
-          schema: EmployeeSchema,
+          schema: GetEmployeeResponseSchema,
         },
       },
       description: "Employee details",
@@ -76,7 +78,7 @@ router.openapi(getEmployeeRoute, (c) => {
     return c.json({ error: "Employee not found" }, 404);
   }
 
-  return c.json(employee, 200);
+  return c.json({ data: employee }, 200);
 });
 
 // POST /employees - Create new employee
