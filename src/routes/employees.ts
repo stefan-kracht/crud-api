@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createRoute, OpenAPIHono } from "@hono/zod-openapi";
+import { faker } from "@faker-js/faker";
 import { generateId } from "./utils/helpers";
 import {
   EmployeeSchema,
@@ -86,7 +87,12 @@ router.openapi(getEmployeeRoute, (c) => {
     return c.json({ error: "Employee not found" }, 404);
   }
 
-  return c.json({ data: employee }, 200);
+  // Generate deterministic image using faker seeded with employee ID
+  const seed = parseInt(employee.id.slice(-10), 36) % 1000000 || 12345;
+  faker.seed(seed);
+  const image = faker.image.avatar();
+
+  return c.json({ data: { ...employee, image } }, 200);
 });
 
 // POST /employees - Create new employee
@@ -128,16 +134,20 @@ router.openapi(createEmployeeRoute, async (c) => {
   try {
     const body = await c.req.json();
 
-    const newEmployee = {
-      id: generateId(),
+    const id = generateId();
+    // Generate deterministic image for the new employee
+    const seed = parseInt(id.slice(-10), 36) % 1000000 || 12345;
+    faker.seed(seed);
+    const newEmployee: Employee = {
+      id,
       name: body.name,
       age: body.age,
       isActive: body.isActive,
       department: body.department,
       salary: body.salary,
       hireDate: body.hireDate || new Date().toISOString(),
+      image: faker.image.avatar(),
     };
-
     employees.push(newEmployee);
     return c.json(newEmployee, 201);
   } catch (error) {

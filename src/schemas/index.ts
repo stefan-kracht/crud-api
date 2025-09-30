@@ -18,6 +18,7 @@ export const EmployeeSchema = z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/)
       .openapi({ example: "2023-01-15T10:00:00.000Z" }),
+    image: z.string().url().optional().openapi({ example: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/123.jpg" }),
   })
   .openapi("Employee");
 
